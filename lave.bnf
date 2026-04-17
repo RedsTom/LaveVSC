@@ -1,0 +1,69 @@
+program ::= (algo | struct | statement_list)*
+
+program_child ::= algo | struct | statement
+
+statement_list ::= statement*
+
+statement ::= if_statement | while_statement | for_statement | return_statement | do_while_statement | assignation_statement | declaration_statement | function_call
+
+if_statement ::= "si" expression "alors" statement_list ("sinon" "si" expression "alors" statement_list)* ("sinon" statement_list)? "fin"
+
+while_statement ::= "tant" "que" expression "faire" statement_list "fin"
+
+for_statement ::= "pour" for_iterator "faire" statement_list "fin"
+
+for_iterator ::= for_int_iterator | for_each_iterator
+
+for_int_iterator ::= IDENTIFIER ":=" expression "à" expression
+
+for_each_iterator ::= IDENTIFIER ("," IDENTIFIER)* "dans" expression
+
+return_statement ::= "renvoyer" expression
+
+do_while_statement ::= "faire" statement_list "tant" "que" expression
+
+assignation_statement ::= primary ":=" expression
+
+declaration_statement ::= IDENTIFIER ":" type ":=" expression
+
+function_call ::= IDENTIFIER "(" (expression ("," expression)*)? ")"
+
+expression ::= boolean_or
+
+boolean_or ::= boolean_and ("ou" boolean_and)*
+
+boolean_and ::= comparison ("et" comparison)*
+
+comparison ::= bitwise_or (("=" | "!=" | "<" | ">" | "<=" | ">=") bitwise_or)*
+
+bitwise_or ::= bitwise_xor ("|" bitwise_xor)*
+
+bitwise_xor ::= bitwise_and ("^" bitwise_and)*
+
+bitwise_and ::= shift ("&" shift)*
+
+shift ::= term (("<<" | ">>") term)*
+
+term ::= factor (("+" | "-") factor)*
+
+factor ::= unary (("*" | "/" | "//" | "%") unary)*
+
+unary ::= ("non" | "-") unary | primary
+
+primary ::= NUMBER_LITERAL | STRING_LITERAL | "vrai" | "faux" | IDENTIFIER | "(" expression ")" | function_call | array_access | field_access
+
+array_access ::= primary "[" expression "]"
+
+field_access ::= primary "." IDENTIFIER
+
+algo ::= "algo" IDENTIFIER signature "->" type "fait" statement_list "fin"
+
+signature ::= "(" (arg_type ("," arg_type)*)? ")"
+
+arg_type ::= IDENTIFIER ":" type
+
+struct ::= "struct" IDENTIFIER "est" struct_body "fin"
+
+struct_body ::= (arg_type)*
+
+type ::= IDENTIFIER ("[" type "]")?
